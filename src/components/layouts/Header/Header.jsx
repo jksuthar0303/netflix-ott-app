@@ -7,9 +7,9 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { NavLink } from "react-router-dom"; // Import NavLink
-import { AuthUserPopover } from "../AuthUserPopover";
+import { AuthUserPopover } from "../../AuthUserPopover";
 import React, { useEffect } from 'react';
-import { Logo } from "../Logo";
+import { Logo } from "../../Logo";
 
 export default function Header() {
 

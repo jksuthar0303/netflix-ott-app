@@ -1,9 +1,9 @@
-import { Card, Image, Modal, ModalContent, ModalHeader, ModalBody, useDisclosure,Button } from "@nextui-org/react";
-import movies from "../../db/Movies";
+import { Card, Image, Modal, ModalContent,  ModalBody, useDisclosure,Button } from "@nextui-org/react";
+import movies from "../../../db/Movies";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Logo } from "../Logo";
+import { Logo } from "../../Logo";
 import { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar,faPlay,faPlus } from '@fortawesome/free-solid-svg-icons';

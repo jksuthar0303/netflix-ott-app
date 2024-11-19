@@ -2,7 +2,7 @@ import { Card, Image, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { useState,useEffect } from "react";
-import profilesData from "../../db/Users"; // Assuming you have this data file
+import profilesData from "../../../db/Users"; // Assuming you have this data file
 
 export default function ManageProfiles() {
     

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import { Card, CardBody, Input, Button } from "@nextui-org/react";
-import { EyeFilledIcon } from "../Icons/EyeFilledIcon";
-import { EyeSlashFilledIcon } from "../Icons/EyeSlashFilledIcon";
-import Users from "../../db/Users"; 
+import { EyeFilledIcon } from "../../Icons/EyeFilledIcon";
+import { EyeSlashFilledIcon } from "../../Icons/EyeSlashFilledIcon";
+import Users from "../../../db/Users"; 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
