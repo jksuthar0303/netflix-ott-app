@@ -26,7 +26,7 @@ import {
           showArrow={true}
         >
           <PopoverTrigger>
-            <Avatar src="/assets/images/profiles/profile1.jpg" />
+            <Avatar radius="none" src="/assets/images/profiles/profile1.jpg" />
           </PopoverTrigger>
           <PopoverContent>
             <div className="px-1 py-2">

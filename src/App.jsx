@@ -7,6 +7,7 @@ import MainLayout from './components/mainlayout/MainLayout';
 import Home from './components/layouts/Home/Home';  
 import Movies from './components/layouts/Movies/Movies';  
 import Series from './components/layouts/Series/Series'; 
+import Search from './components/layouts/Search/Search'
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/browser" element={<Movies />} />
           <Route path="/series" element={<Series />} />
+          <Route path="/search" element={<Search />} />
         </Route>
       </Routes>
     </Router>
