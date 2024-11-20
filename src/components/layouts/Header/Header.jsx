@@ -5,7 +5,7 @@ import {
   NavbarItem,
 } from "@nextui-org/react";
 import { NavLink } from "react-router-dom";
-import { AuthUserPopover } from "../../AuthUserPopover";
+import { AuthUserPopover } from "../Account/index";
 import React, { useState,useRef,useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";

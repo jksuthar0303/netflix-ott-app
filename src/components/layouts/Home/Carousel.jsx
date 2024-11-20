@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faChevronRight,faPlay, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlay, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Button } from "@nextui-org/react";
 
 
@@ -58,13 +58,7 @@ const Carousel = ({ slides, autoSlideInterval = 3000 }) => {
             </div>
 
 
-            <div className="absolute top-[23%] sm:top-[23%] lg:top-[33%] left-5 text-1xl rounded-full p-2 bg-black/20 text-white cursor-pointer">
-                <FontAwesomeIcon icon={faChevronLeft} onClick={prevSlide} />
-            </div>
-
-            <div className="absolute top-[23%] sm:top-[23%] lg:top-[33%]  right-5 text-1xl rounded-full p-2 bg-black/20 text-white cursor-pointer">
-                <FontAwesomeIcon icon={faChevronRight} onClick={nextSlide} />
-            </div>
+           
         </div>
        </div>
     );
