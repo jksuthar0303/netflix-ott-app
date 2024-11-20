@@ -44,7 +44,7 @@ useEffect(() => {
   };
 }, []);
   return (
-    <div className="mt-4">
+    <div>
       <Navbar className="bg-black" hideOnScroll={isSearchActive}>
       <NavbarBrand>
           <Logo />
