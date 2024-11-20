@@ -4,7 +4,8 @@ import { Card, CardBody, Input, Button } from "@nextui-org/react";
 import { EyeFilledIcon } from "../../Icons/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "../../Icons/EyeSlashFilledIcon";
 import Users from "../../../db/Users"; 
-const Login = () => {
+const SignUp = () => {
+    const [name,setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isVisible, setIsVisible] = useState(false);
@@ -13,11 +14,11 @@ const Login = () => {
   const navigate = useNavigate(); 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const handleLogin = (e) => {
+  const handleSignUp = (e) => {
     e.preventDefault();
     
    
-    if (!email || !password) {
+    if (!name || !email || !password) {
       setError('Please fill in both fields');
       return;
     }
@@ -31,12 +32,12 @@ const Login = () => {
       if (user) {
         setError('');
         localStorage.setItem('currentUser', JSON.stringify(user));  
-        navigate('/manageprofiles'); 
+        navigate('/manage-profiles'); 
       } else {
        
         const newUser = {
           id: Users.length + 1, 
-          name: 'Jaikishan Kulriya', 
+          name, 
           email,
           password,
           profilePic: '/assets/images/profiles/profile1.jpg', 
@@ -47,7 +48,7 @@ const Login = () => {
         
         localStorage.setItem('users', JSON.stringify(Users)); 
         localStorage.setItem('currentUser', JSON.stringify(newUser));
-        navigate('/manageprofiles');
+        navigate('/manage-profiles');
       }
 
       setIsLoading(false);
@@ -76,10 +77,18 @@ const Login = () => {
       <div className="flex justify-center items-center min-h-screen">
         <Card radius="none" className="bg-black bg-opacity-70 h-[650px] w-[450px]">
           <CardBody className="h-full">
-            <h1 className="ml-14 text-white text-3xl font-bold mt-8">Sign in</h1>
+            <h1 className="ml-14 text-white text-3xl font-bold mt-8">Sign Up</h1>
 
             <div className="flex flex-col justify-center items-center mt-6">
-            
+            <Input
+                className="max-w-xs mb-6 text-white"
+                variant="bordered"
+                radius="sm"
+                type="Name"
+                label="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
               <Input
                 className="max-w-xs mb-6 text-white"
                 variant="bordered"
@@ -122,10 +131,10 @@ const Login = () => {
               <Button
                 radius="sm"
                 className="w-80 bg-[#e00000] text-white mb-6 hover:bg-[#e00000] focus:outline-none"
-                onClick={handleLogin}
+                onClick={handleSignUp}
                 disabled={isLoading}
               >
-                {isLoading ? 'Logging in...' : 'Sign In'}
+                {isLoading ? 'Signing in...' : 'Sign Up'}
               </Button>
 
              
@@ -138,7 +147,7 @@ const Login = () => {
               </Button>
 
               
-              <a href="/forget-password" className="text-white mt-6 hover:underline">Forget Password?</a>
+              
             </div>
 
            
@@ -149,8 +158,8 @@ const Login = () => {
 
            
             <div className="ml-14 mt-4">
-              <span className="text-gray-500">New to Netflix?</span>
-              <a href="/signup" className="text-white ml-2 hover:underline">Sign up Now.</a>
+              <span className="text-gray-500">Already have a Account</span>
+              <a href="/login" className="text-white ml-2 hover:underline">Login Now</a>
             </div>
           </CardBody>
         </Card>
@@ -159,4 +168,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;

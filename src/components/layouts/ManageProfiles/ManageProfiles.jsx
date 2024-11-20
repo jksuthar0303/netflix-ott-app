@@ -2,8 +2,7 @@ import { Card, Image, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { useState,useEffect } from "react";
-import profilesData from "../../../db/Users"; // Assuming you have this data file
-
+import profilesData from "../../../db/Users"; 
 export default function ManageProfiles() {
     
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -73,8 +72,8 @@ export default function ManageProfiles() {
     };
 
     return (
-        <div className="ManageProfiles min-h-screen flex justify-center items-center">
-            <div>
+        <div className="ManageProfiles">
+            <div className="flex flex-col min-h-screen justify-center items-center">
                 <h1 className="text-6xl font-bold text-white my-8">Who's watching?</h1>
                 <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
                     {profiles.map((profile) => (
@@ -189,7 +188,6 @@ export default function ManageProfiles() {
                     </ModalContent>
                 </Modal>
 
-                {/* Manage Profiles button */}
                 <Button
                     size="lg"
                     radius="none"
