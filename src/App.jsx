@@ -3,10 +3,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/layouts/Login&Signup/Login'
 
 import ManageProfiles from './components/layouts/ManageProfiles/ManageProfiles'
-import MainLayout from './components/mainlayout/MainLayout'; 
-import Home from './components/layouts/Home/Home';  
-import Movies from './components/layouts/Movies/Movies';  
-import Series from './components/layouts/Series/Series'; 
+import MainLayout from './components/mainlayout/MainLayout';
+import Home from './components/layouts/Home/Home';
+import Movies from './components/layouts/Movies/Movies';
+import Series from './components/layouts/Series/Series';
 import Search from './components/layouts/Search/Search'
 import SignUp from './components/layouts/Login&Signup/Signup';
 import ForgetPassword from './components/layouts/ForgetPassword/ForgetPassword';
@@ -17,11 +17,11 @@ function App() {
   return (
     <Router>
       <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path='/signup' element={<SignUp />} />
-      <Route path='/forget-password' element={<ForgetPassword />} />
-      <Route path='/update-password' element={<UpdatePassword />} />
-      <Route path="/manage-profiles" element={<ManageProfiles />} />
+        <Route path="/login" element={<Login />} />
+        <Route path='/signup' element={<SignUp />} />
+        <Route path='/forget-password' element={<ForgetPassword />} />
+        <Route path='/update-password' element={<UpdatePassword />} />
+        <Route path="/manage-profiles" element={<ManageProfiles />} />
 
 
         <Route path="/" element={<MainLayout />}>

@@ -1,15 +1,15 @@
 import { Card, Image, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Avatar, Input } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
-import { useState,useEffect } from "react";
-import profilesData from "../../../db/Users"; 
+import { useState, useEffect } from "react";
+import profilesData from "../../../db/Users";
 export default function ManageProfiles() {
-    
+
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [profiles, setProfiles] = useState(profilesData);
     const [newProfileName, setNewProfileName] = useState("");
-    const [editingProfile, setEditingProfile] = useState(null); 
-    const [isManagingProfiles, setIsManagingProfiles] = useState(false); 
+    const [editingProfile, setEditingProfile] = useState(null);
+    const [isManagingProfiles, setIsManagingProfiles] = useState(false);
 
     useEffect(() => {
         document.body.style.backgroundColor = "black";
@@ -32,20 +32,20 @@ export default function ManageProfiles() {
             };
             setProfiles([...profiles, newProfile]);
             setNewProfileName("");
-            setEditingProfile(null); 
-            onOpenChange(false); 
+            setEditingProfile(null);
+            onOpenChange(false);
         }
     };
 
     const handleEditProfile = (profile) => {
         setEditingProfile(profile);
         setNewProfileName(profile.name);
-        onOpen(); 
+        onOpen();
     };
 
     const handleDeleteProfile = (profileId) => {
         setProfiles(profiles.filter(profile => profile.id !== profileId));
-        setEditingProfile(null); 
+        setEditingProfile(null);
         onOpenChange(false);
     };
 
@@ -56,19 +56,19 @@ export default function ManageProfiles() {
             );
             setProfiles(updatedProfiles);
             setNewProfileName("");
-            setEditingProfile(null); 
-            onOpenChange(false); 
+            setEditingProfile(null);
+            onOpenChange(false);
         }
     };
 
     const toggleManageProfiles = () => {
-        setIsManagingProfiles(prevState => !prevState); 
+        setIsManagingProfiles(prevState => !prevState);
     };
 
     const handleOpenAddProfileModal = () => {
-        setEditingProfile(null); 
-        setNewProfileName(""); 
-        onOpen(); 
+        setEditingProfile(null);
+        setNewProfileName("");
+        onOpen();
     };
 
     return (
@@ -105,7 +105,7 @@ export default function ManageProfiles() {
                     <div className="flex flex-col items-center">
                         <Card
                             isPressable
-                            onPress={handleOpenAddProfileModal} 
+                            onPress={handleOpenAddProfileModal}
                             isFooterBlurred
                             radius="lg"
                             className="border-none flex items-center justify-center h-[200px] w-[200px] bg-black mb-2"
@@ -147,12 +147,12 @@ export default function ManageProfiles() {
                                 <ModalFooter className="justify-start ml-40">
                                     {editingProfile ? (
                                         <>
-                                            <Button 
-                                                className="mr-4" 
-                                                radius="none" 
-                                                size="lg"  
+                                            <Button
+                                                className="mr-4"
+                                                radius="none"
+                                                size="lg"
                                                 onPress={handleSaveEditedProfile}
-                                                css={{backgroundColor:'White'}}
+                                                css={{ backgroundColor: 'White' }}
                                             >
                                                 Save Changes
                                             </Button>
@@ -168,11 +168,11 @@ export default function ManageProfiles() {
                                         </>
                                     ) : (
                                         <Button
-                                            className="mr-4" 
-                                            radius="none" 
-                                            size="lg"  
+                                            className="mr-4"
+                                            radius="none"
+                                            size="lg"
                                             onPress={handleAddProfile}
-                                            css={{backgroundColor:'White'}}
+                                            css={{ backgroundColor: 'White' }}
                                         >
                                             Continue
                                         </Button>

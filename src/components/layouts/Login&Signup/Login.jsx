@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import { Card, CardBody, Input, Button } from "@nextui-org/react";
 import { EyeFilledIcon } from "../../Icons/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "../../Icons/EyeSlashFilledIcon";
-import Users from "../../../db/Users"; 
+import Users from "../../../db/Users";
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isVisible, setIsVisible] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   const handleLogin = (e) => {
     e.preventDefault();
-    
-   
+
+
     if (!email || !password) {
       setError('Please fill in both fields');
       return;
@@ -27,31 +27,31 @@ const Login = () => {
 
     setTimeout(() => {
       const user = Users.find(user => user.email === email && user.password === password);
-      
+
       if (user) {
         setError('');
-        localStorage.setItem('currentUser', JSON.stringify(user));  
-        navigate('/manageprofiles'); 
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        navigate('/manageprofiles');
       } else {
-       
+
         const newUser = {
-          id: Users.length + 1, 
-          name: 'Jaikishan Kulriya', 
+          id: Users.length + 1,
+          name: 'Jaikishan Kulriya',
           email,
           password,
-          profilePic: '/assets/images/profiles/profile1.jpg', 
+          profilePic: '/assets/images/profiles/profile1.jpg',
         };
 
-        Users.push(newUser); 
+        Users.push(newUser);
 
-        
-        localStorage.setItem('users', JSON.stringify(Users)); 
+
+        localStorage.setItem('users', JSON.stringify(Users));
         localStorage.setItem('currentUser', JSON.stringify(newUser));
         navigate('/manageprofiles');
       }
 
       setIsLoading(false);
-    }, 1000); 
+    }, 1000);
   };
 
   useEffect(() => {
@@ -79,7 +79,7 @@ const Login = () => {
             <h1 className="ml-14 text-white text-3xl font-bold mt-8">Sign in</h1>
 
             <div className="flex flex-col justify-center items-center mt-6">
-            
+
               <Input
                 className="max-w-xs mb-6 text-white"
                 variant="bordered"
@@ -90,7 +90,7 @@ const Login = () => {
                 onChange={(e) => setEmail(e.target.value)}
               />
 
-             
+
               <Input
                 label="Password"
                 radius="sm"
@@ -116,7 +116,7 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
 
-    
+
               {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
               <Button
@@ -128,7 +128,7 @@ const Login = () => {
                 {isLoading ? 'Logging in...' : 'Sign In'}
               </Button>
 
-             
+
               <span className="mb-6 text-gray-500 text-lg"> OR</span>
               <Button
                 radius="sm"
@@ -137,17 +137,17 @@ const Login = () => {
                 Use a sign-in code
               </Button>
 
-              
+
               <a href="/forget-password" className="text-white mt-6 hover:underline">Forget Password?</a>
             </div>
 
-           
+
             <div className="ml-14 mt-4">
               <input type="checkbox" id="myCheckbox" />
               <span className="text-white">Remember me</span>
             </div>
 
-           
+
             <div className="ml-14 mt-4">
               <span className="text-gray-500">New to Netflix?</span>
               <a href="/signup" className="text-white ml-2 hover:underline">Sign up Now.</a>
