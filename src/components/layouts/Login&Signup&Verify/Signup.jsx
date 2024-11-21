@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardBody, Input, Button } from "@nextui-org/react";
 import { EyeFilledIcon } from "../../Icons/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "../../Icons/EyeSlashFilledIcon";
+import { z } from 'zod';
 import Users from "../../../db/Users";
 const SignUp = () => {
     const [name, setName] = useState('');
@@ -14,12 +15,33 @@ const SignUp = () => {
     const navigate = useNavigate();
     const toggleVisibility = () => setIsVisible(!isVisible);
 
+    // Zod validation schema for the form fields
+    const signUpSchema = z.object({
+        name: z.string().min(1, "Name is required"),
+        email: z.string().email("Please enter a valid email address"), // Email validation
+        password: z.string().min(6, "Password must be at least 6 characters"),
+    });
+
     const handleSignUp = (e) => {
-        e.preventDefault();
+        e.preventDefault();  // Prevent form from reloading the page
 
+        // Validate the fields with the zod schema
+        const result = signUpSchema.safeParse({
+            name,
+            email,
+            password,
+        });
 
-        if (!name || !email || !password) {
-            setError('Please fill in both fields');
+        if (!result.success) {
+            // If validation fails, set the error message
+            const errorMessage = result.error.errors.map((err) => err.message).join(", ");
+            setError(errorMessage);
+            return;
+        }
+
+        // Check if passwords match
+        if (password !== confirmpassword) {
+            setError('Passwords do not match');
             return;
         }
 
@@ -27,33 +49,29 @@ const SignUp = () => {
         setError('');
 
         setTimeout(() => {
-            const user = Users.find(user => user.email === email && user.password === password);
+            const user = Users.find(user => user.email === email);
 
             if (user) {
-                setError('');
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                navigate('/manage-profiles');
-            } else {
-
-                const newUser = {
-                    id: Users.length + 1,
-                    name,
-                    email,
-                    password,
-                    profilePic: '/assets/images/profiles/profile1.jpg',
-                };
-
-                Users.push(newUser);
-
-
-                localStorage.setItem('users', JSON.stringify(Users));
-                localStorage.setItem('currentUser', JSON.stringify(newUser));
-                navigate('/manage-profiles');
+                setError('User with this email already exists');
+                setIsLoading(false);
+                return;
             }
 
+            const newUser = {
+                id: Users.length + 1,
+                name,
+                email,
+                password,
+                profilePic: '/assets/images/profiles/profile1.jpg',
+            };
+
+            Users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(Users));
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+            navigate('/manage-profiles');
             setIsLoading(false);
-        }, 1000);
-    };
+        }, 1000);
+    };
 
     useEffect(() => {
         document.body.style.backgroundImage = 'url(/assets/images/bg.png)';
