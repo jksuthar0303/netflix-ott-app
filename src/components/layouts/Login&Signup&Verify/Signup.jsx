@@ -87,7 +87,6 @@ const SignUp = () => {
                     message: 'Verification code sent successfully',
                 });
 
-                console.log(message);
 
 
                 // Navigate to the verification page

@@ -3,7 +3,30 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardBody, Input, Button } from "@nextui-org/react";
 import { EyeFilledIcon } from "../../Icons/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "../../Icons/EyeSlashFilledIcon";
-import Users from "../../../db/Users";
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import Users from "../../../db/Users"; // Assuming this contains an array of user objects
+
+// Initialize the mock adapter
+const mock = new MockAdapter(axios);
+
+// Mocking an API for login
+mock.onPost("http://localhost:5173/login").reply((config) => {
+  const { email, password } = JSON.parse(config.data);
+  const user = Users.find(user => user.email === email && user.password === password);
+  
+  if (user) {
+    // Check if user is verified
+    if (user.isVerified) {
+      return [200, { user }];
+    } else {
+      return [403, { message: "User is not verified." }];
+    }
+  } else {
+    return [401, { message: "Invalid credentials" }];
+  }
+});
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -11,11 +34,11 @@ const Login = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-
 
     if (!email || !password) {
       setError('Please fill in both fields');
@@ -25,33 +48,19 @@ const Login = () => {
     setIsLoading(true);
     setError('');
 
-    setTimeout(() => {
-      const user = Users.find(user => user.email === email && user.password === password);
+    try {
+      const response = await axios.post('http://localhost:5173/login', { email, password });
 
-      if (user) {
-        setError('');
+      if (response.status === 200) {
+        const user = response.data.user;
         localStorage.setItem('currentUser', JSON.stringify(user));
-        navigate('/manageprofiles');
-      } else {
-
-        const newUser = {
-          id: Users.length + 1,
-          name: 'Jaikishan Kulriya',
-          email,
-          password,
-          profilePic: '/assets/images/profiles/profile1.jpg',
-        };
-
-        Users.push(newUser);
-
-
-        localStorage.setItem('users', JSON.stringify(Users));
-        localStorage.setItem('currentUser', JSON.stringify(newUser));
-        navigate('/manageprofiles');
+        navigate('/home');
       }
-
+    } catch (err) {
+      setError(err.response?.data?.message || 'Login failed');
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   useEffect(() => {
@@ -79,7 +88,6 @@ const Login = () => {
             <h1 className="ml-14 text-white text-3xl font-bold mt-8">Sign in</h1>
 
             <div className="flex flex-col justify-center items-center mt-6">
-
               <Input
                 className="max-w-xs mb-6 text-white"
                 variant="bordered"
@@ -89,7 +97,6 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-
 
               <Input
                 label="Password"
@@ -116,7 +123,6 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
 
-
               {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
               <Button
@@ -128,7 +134,6 @@ const Login = () => {
                 {isLoading ? 'Logging in...' : 'Sign In'}
               </Button>
 
-
               <span className="mb-6 text-gray-500 text-lg"> OR</span>
               <Button
                 radius="sm"
@@ -137,16 +142,13 @@ const Login = () => {
                 Use a sign-in code
               </Button>
 
-
               <a href="/forget-password" className="text-white mt-6 hover:underline">Forget Password?</a>
             </div>
-
 
             <div className="ml-14 mt-4">
               <input type="checkbox" id="myCheckbox" />
               <span className="text-white">Remember me</span>
             </div>
-
 
             <div className="ml-14 mt-4">
               <span className="text-gray-500">New to Netflix?</span>
