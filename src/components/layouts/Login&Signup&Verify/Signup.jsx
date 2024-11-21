@@ -4,11 +4,14 @@ import { Card, CardBody, Input, Button } from "@nextui-org/react";
 import { EyeFilledIcon } from "../../Icons/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "../../Icons/EyeSlashFilledIcon";
 import { z } from 'zod';
-import Users from "../../../db/Users";
+import axios from 'axios';
+import AxiosMockAdapter from 'axios-mock-adapter';
+
 const SignUp = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [isVisible, setIsVisible] = useState(false);
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -18,11 +21,11 @@ const SignUp = () => {
     // Zod validation schema for the form fields
     const signUpSchema = z.object({
         name: z.string().min(1, "Name is required"),
-        email: z.string().email("Please enter a valid email address"), // Email validation
+        email: z.string().email("Please enter a valid email address"),
         password: z.string().min(6, "Password must be at least 6 characters"),
     });
 
-    const handleSignUp = (e) => {
+    const handleSignUp = async (e) => {
         e.preventDefault();  // Prevent form from reloading the page
 
         // Validate the fields with the zod schema
@@ -33,14 +36,13 @@ const SignUp = () => {
         });
 
         if (!result.success) {
-            // If validation fails, set the error message
             const errorMessage = result.error.errors.map((err) => err.message).join(", ");
             setError(errorMessage);
             return;
         }
 
         // Check if passwords match
-        if (password !== confirmpassword) {
+        if (password !== confirmPassword) {
             setError('Passwords do not match');
             return;
         }
@@ -48,30 +50,56 @@ const SignUp = () => {
         setIsLoading(true);
         setError('');
 
-        setTimeout(() => {
-            const user = Users.find(user => user.email === email);
+        // Mock Axios request for testing
+        const mock = new AxiosMockAdapter(axios);
 
-            if (user) {
-                setError('User with this email already exists');
-                setIsLoading(false);
-                return;
-            }
-
-            const newUser = {
-                id: Users.length + 1,
+        // Setup mock response for the signup endpoint
+        mock.onPost('http://localhost:5173/signup').reply(200, {
+            message: 'User registered successfully',
+            user: {
+                id: Date.now(),
                 name,
                 email,
                 password,
+                isVerified: false, // New user starts with isVerified as false
                 profilePic: '/assets/images/profiles/profile1.jpg',
-            };
+            }
+        });
 
-            Users.push(newUser);
-            localStorage.setItem('users', JSON.stringify(Users));
-            localStorage.setItem('currentUser', JSON.stringify(newUser));
-            navigate('/manage-profiles');
+        try {
+            // Make the API call
+            const response = await axios.post('http://localhost:5173/signup', {
+                name,
+                email,
+                password,
+            });
+
+            // If the signup is successful, simulate sending a verification code
+            if (response.status === 200) {
+                const newUser = response.data.user;
+                console.log(newUser);
+
+                // Store the user in localStorage
+                localStorage.setItem('currentUser', JSON.stringify(newUser));
+
+                // Simulate sending a verification code
+                mock.onPost('http://localhost:5173/verify').reply(200, {
+                    message: 'Verification code sent successfully',
+                });
+
+                console.log(message);
+
+
+                // Navigate to the verification page
+                navigate('/verify');
+            }
+        } catch (err) {
+            setError('An error occurred. Please try again.');
+            console.error('Error signing up:', err);
+        } finally {
             setIsLoading(false);
-        }, 1000);
-    };
+        }
+    };
 
     useEffect(() => {
         document.body.style.backgroundImage = 'url(/assets/images/bg.png)';
@@ -102,7 +130,7 @@ const SignUp = () => {
                                 className="max-w-xs mb-6 text-white"
                                 variant="bordered"
                                 radius="sm"
-                                type="Name"
+                                type="text"
                                 label="Name"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
@@ -116,7 +144,6 @@ const SignUp = () => {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
-
 
                             <Input
                                 label="Password"
@@ -143,6 +170,30 @@ const SignUp = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
 
+                            <Input
+                                label="Confirm Password"
+                                radius="sm"
+                                variant="bordered"
+                                placeholder="Confirm your password"
+                                endContent={
+                                    <button
+                                        className="focus:outline-none"
+                                        type="button"
+                                        onClick={toggleVisibility}
+                                        aria-label="toggle password visibility"
+                                    >
+                                        {isVisible ? (
+                                            <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                                        ) : (
+                                            <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                                        )}
+                                    </button>
+                                }
+                                type={isVisible ? 'text' : 'password'}
+                                className="max-w-xs text-white mb-6"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                            />
 
                             {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
@@ -152,9 +203,8 @@ const SignUp = () => {
                                 onClick={handleSignUp}
                                 disabled={isLoading}
                             >
-                                {isLoading ? 'Signing in...' : 'Sign Up'}
+                                {isLoading ? 'Signing up...' : 'Sign Up'}
                             </Button>
-
 
                             <span className="mb-6 text-gray-500 text-lg"> OR</span>
                             <Button
@@ -163,20 +213,15 @@ const SignUp = () => {
                             >
                                 Use a sign-in code
                             </Button>
-
-
-
                         </div>
-
 
                         <div className="ml-14 mt-4">
                             <input type="checkbox" id="myCheckbox" />
                             <span className="text-white">Remember me</span>
                         </div>
 
-
                         <div className="ml-14 mt-4">
-                            <span className="text-gray-500">Already have a Account</span>
+                            <span className="text-gray-500">Already have an Account?</span>
                             <a href="/login" className="text-white ml-2 hover:underline">Login Now</a>
                         </div>
                     </CardBody>

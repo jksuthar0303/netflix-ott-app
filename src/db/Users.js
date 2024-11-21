@@ -2,6 +2,7 @@ const Users = [
     {
       id: 1,
       name: "Jaikishan",
+      email:"jksuthar2017@gmail.com",//DEfault email to check verify user working yes or note
       profilepic: "/assets/images/profiles/profile1.jpg", 
     },
     {
