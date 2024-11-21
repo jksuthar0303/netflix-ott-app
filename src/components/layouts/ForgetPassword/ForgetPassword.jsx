@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardBody, Input, Button } from "@nextui-org/react";
 import { useNavigate } from 'react-router-dom';
+import Users from "../../../db/Users";
+import { z } from 'zod';
 
 const ForgetPassword = () => {
     const [email, setEmail] = useState('');
@@ -8,24 +10,37 @@ const ForgetPassword = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
+
+    const signUpSchema = z.object({
+        email: z.string().email("Please enter a valid email address"),
+    });
     const handleForgetPassword = (e) => {
         e.preventDefault();
-
-
-        if (!email) {
-            setError('Please fill in fields');
-            return;
-        } else {
-            navigate('/update-password')
-        }
-
+        setError(''); 
         setIsLoading(true);
-        setError('');
 
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 1000);
+        const result = signUpSchema.safeParse({
+            email,
+        });
+        const user = Users.find(user => user.email === email);
+      
+        if (!result.success) {
+          const errorMessage = result.error.errors.map((err) => err.message).join(", ");
+          setError(errorMessage);
+          setIsLoading(false); 
+          return;
+      }else if (user) {
+        // Passing the user data to the UpdatePassword page using state
+        navigate('/update-password', { state: { user } });
+        console.log(user);
+        
+    } else {
+        setError("User Not Found");
+        setIsLoading(false); 
+    }
+
     };
+
     useEffect(() => {
         document.body.style.backgroundImage = 'url(/assets/images/bg.png)';
         document.body.style.backgroundSize = 'cover';
@@ -51,7 +66,6 @@ const ForgetPassword = () => {
                         <h1 className="ml-14 text-white text-3xl font-bold mt-8">Forget Password</h1>
 
                         <div className="flex flex-col justify-center items-center mt-6">
-
                             <Input
                                 className="max-w-xs mb-6 text-white"
                                 variant="bordered"
@@ -60,7 +74,6 @@ const ForgetPassword = () => {
                                 value={email}
                                 label="Enter Email or mobile number"
                                 onChange={(e) => setEmail(e.target.value)}
-
                             />
 
                             {error && <div className="text-red-500 text-center mb-4">{error}</div>}
@@ -74,17 +87,16 @@ const ForgetPassword = () => {
                                 {isLoading ? 'Password Forgetting...' : 'Forget Password'}
                             </Button>
 
-
                             <span className="mb-6 text-gray-500 text-lg"> OR</span>
                             <Button
                                 radius="sm"
+                                onClick={()=>{
+                                    navigate('/login')
+                                }}
                                 className="w-80 bg-[#4d4c4c74] text-white hover:bg-[#4d4c4c74] focus:outline-none"
                             >
                                 Sign in Using Password
                             </Button>
-
-
-
                         </div>
                     </CardBody>
                 </Card>

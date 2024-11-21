@@ -4,19 +4,17 @@ import { Card, CardBody, Input, Button } from "@nextui-org/react";
 import { EyeFilledIcon } from "../../Icons/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "../../Icons/EyeSlashFilledIcon";
 import axios from 'axios';
+import { z } from 'zod';
 import MockAdapter from 'axios-mock-adapter';
-import Users from "../../../db/Users"; // Assuming this contains an array of user objects
+import Users from "../../../db/Users";
 
-// Initialize the mock adapter
 const mock = new MockAdapter(axios);
 
-// Mocking an API for login
 mock.onPost("http://localhost:5173/login").reply((config) => {
   const { email, password } = JSON.parse(config.data);
   const user = Users.find(user => user.email === email && user.password === password);
-  
+
   if (user) {
-    // Check if user is verified
     if (user.isVerified) {
       return [200, { user }];
     } else {
@@ -35,13 +33,24 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
+  const signUpSchema = z.object({
+    email: z.string().email("Please enter a valid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+  });
+
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (!email || !password) {
-      setError('Please fill in both fields');
+    const result = signUpSchema.safeParse({
+      email,
+      password,
+    });
+
+    if (!result.success) {
+      const errorMessage = result.error.errors.map((err) => err.message).join(", ");
+      setError(errorMessage);
       return;
     }
 
@@ -55,6 +64,7 @@ const Login = () => {
         const user = response.data.user;
         localStorage.setItem('currentUser', JSON.stringify(user));
         navigate('/home');
+
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
@@ -93,7 +103,8 @@ const Login = () => {
                 variant="bordered"
                 radius="sm"
                 type="email"
-                label="Email or mobile number"
+                label="Email"
+                placeholder='example@gmail.com'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -143,11 +154,6 @@ const Login = () => {
               </Button>
 
               <a href="/forget-password" className="text-white mt-6 hover:underline">Forget Password?</a>
-            </div>
-
-            <div className="ml-14 mt-4">
-              <input type="checkbox" id="myCheckbox" />
-              <span className="text-white">Remember me</span>
             </div>
 
             <div className="ml-14 mt-4">

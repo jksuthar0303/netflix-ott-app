@@ -100,6 +100,7 @@ const SignUp = () => {
         }
     };
 
+
     useEffect(() => {
         document.body.style.backgroundImage = 'url(/assets/images/bg.png)';
         document.body.style.backgroundSize = 'cover';
@@ -139,7 +140,7 @@ const SignUp = () => {
                                 variant="bordered"
                                 radius="sm"
                                 type="email"
-                                label="Email or mobile number"
+                                label="Email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
@@ -157,9 +158,9 @@ const SignUp = () => {
                                         aria-label="toggle password visibility"
                                     >
                                         {isVisible ? (
-                                            <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                                            <EyeSlashFilledIcon className="hidden text-2xl text-default-400 pointer-events-none" />
                                         ) : (
-                                            <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                                            <EyeFilledIcon className="hidden text-2xl text-default-400 pointer-events-none" />
                                         )}
                                     </button>
                                 }
@@ -213,12 +214,6 @@ const SignUp = () => {
                                 Use a sign-in code
                             </Button>
                         </div>
-
-                        <div className="ml-14 mt-4">
-                            <input type="checkbox" id="myCheckbox" />
-                            <span className="text-white">Remember me</span>
-                        </div>
-
                         <div className="ml-14 mt-4">
                             <span className="text-gray-500">Already have an Account?</span>
                             <a href="/login" className="text-white ml-2 hover:underline">Login Now</a>

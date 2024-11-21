@@ -3,13 +3,15 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-  Divider
+  Button
 } from "@nextui-org/react";
 import { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faQuestionCircle, faUser } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from "react-router-dom";
 export const AuthUserPopover = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   function showPopover() {
     console.log("on hover executed");
@@ -18,6 +20,11 @@ export const AuthUserPopover = () => {
 
   function hidePopover() {
     setIsOpen(false);
+  }
+
+  function handleLogout(){
+    localStorage.removeItem("currentUser");
+    navigate('/login')
   }
   return (
     <div onMouseEnter={showPopover} onMouseLeave={hidePopover}>
@@ -54,7 +61,18 @@ export const AuthUserPopover = () => {
               <FontAwesomeIcon icon={faQuestionCircle} className="text-white text-2xl" />
               <span className="ml-5">Help Center</span>
             </div>
-            <hr></hr>
+            <hr className="mt-4 mb-4"></hr>
+            <div className="flex justify-center">
+            <Button
+                radius="sm"
+                onClick={handleLogout}
+                className="w-20 bg-[#e00000] text-white mb-6 hover:bg-[#e00000] focus:outline-none"
+               
+              >
+                Logout
+              </Button>
+            </div>
+
           </div>
 
         </PopoverContent>

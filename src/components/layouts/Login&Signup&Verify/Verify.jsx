@@ -10,7 +10,10 @@ const Verify = () => {
     // Check if user is already verified
     useEffect(() => {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (currentUser && currentUser.isVerified) {
+        if (!currentUser) {
+            // If no user is found in localStorage, redirect to login
+            navigate('/login');  // Assuming '/login' is your login route
+        } else if (currentUser.isVerified) {
             // If user is verified, redirect to home page
             navigate('/home');
         }

@@ -2,11 +2,12 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 
 const PrivateRoute = ({ element }) => {
-  const user = JSON.parse(localStorage.getItem('currentUser')); // Retrieve user data from localStorage
+  const isAuthenticated = localStorage.getItem('currentUser');
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+}
 
-  // If the user is authenticated, render the protected route element
-  // Otherwise, redirect to the login page
-  return user ? element : <Navigate to="/login" />;
+  return element;
 };
 
 export default PrivateRoute;
