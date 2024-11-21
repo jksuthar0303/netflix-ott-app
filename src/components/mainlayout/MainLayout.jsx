@@ -5,8 +5,9 @@ import Footer from '../layouts/Footer/Footer';
 
 export default function MainLayout() {
     return (
+        
         <div className="flex flex-col lg:h-[1600px] sm:h-[1450px] bg-black text-white"> 
-        <div className='fixed z-40 w-full'>
+        <div className='fixed z-10 w-full'>
         <Header />
 
         </div>

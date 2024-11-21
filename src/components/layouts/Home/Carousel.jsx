@@ -30,7 +30,7 @@ const Carousel = ({ slides, autoSlideInterval = 3000 }) => {
     }, [currentIndex, autoSlideInterval]);
 
     return (
-        <div className='h-full sm:h-[500px] lg:h-[700px]'>
+        <div className='h-full sm:h-[500px] lg:h-[700px] mt-14'>
             <div className="h-[780px] w-full m-auto px-10 relative group">
                 <div className="relative w-full h-[50%] sm:h-[50%] lg:h-[70%] rounded-xl bg-center bg-cover duration-500"
                     style={{ backgroundImage: `url(${slides[currentIndex].url})` }}>
